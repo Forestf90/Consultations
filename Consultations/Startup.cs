@@ -37,10 +37,20 @@ namespace Consultations
             services.AddDbContext<ApplicationDbContext>(options =>
                     options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddDefaultIdentity<IdentityUser>()
-                .AddRoles<IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
-                
+            //services.AddDefaultIdentity<IdentityUser>()
+            //    .AddRoles<IdentityRole>()
+            //    .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddIdentity<IdentityUser,IdentityRole>(config =>
+            {
+               // config.SignIn.RequireConfirmedEmail = true;
+            })
+                    .AddRoleManager<RoleManager<IdentityRole>>()
+                    .AddDefaultUI()
+                    .AddDefaultTokenProviders()
+                    .AddEntityFrameworkStores<ApplicationDbContext>();
+
+
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
