@@ -1,4 +1,5 @@
 ﻿using Consultations.Enums;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,11 +10,11 @@ namespace Consultations.Models
     public class Teacher : User
     {
         public Title Title { get; set; }
-        public ICollection<StudentConsultation> Consultations { get; set; }
+        public ICollection<Consultation> Consultations { get; set; }
 
         public Teacher()
         {
-            Consultations = new HashSet<StudentConsultation>();
+            Consultations = new HashSet<Consultation>();
         }
     }
 }

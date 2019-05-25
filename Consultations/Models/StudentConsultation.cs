@@ -8,9 +8,9 @@ namespace Consultations.Models
     public class StudentConsultation
     {
         public int Id { get; set; }
-        public int StudentId { get; set; }
+        public string StudentId { get; set; }
         public Student Student { get; set; }
-        public int ConsultationId { get; set; }
+        public string ConsultationId { get; set; }
         public Consultation Consultation { get; set; }
 
     }

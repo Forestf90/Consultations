@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Consultations.Models
 {
-    public class User : IdentityUser
+    public abstract class User : IdentityUser
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }

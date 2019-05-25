@@ -7,7 +7,7 @@ namespace Consultations.Models
 {
     public class Consultation
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public int Room { get; set; }
         public DateTime Date { get; set; }
         public Teacher Teacher { get; set; }

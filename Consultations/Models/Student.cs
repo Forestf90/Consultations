@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Consultations.Models
 {
-    public class Student : IdentityUser
+    public class Student : User
     {
         //public int Id { get; set; }
         public short Semester { get; set; }
