@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Consultations.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Consultations.Models;
 
 namespace Consultations
 {
@@ -41,7 +42,7 @@ namespace Consultations
             //    .AddRoles<IdentityRole>()
             //    .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            services.AddIdentity<IdentityUser,IdentityRole>(config =>
+            services.AddIdentity<AppUser, IdentityRole>(config =>
             {
                // config.SignIn.RequireConfirmedEmail = true;
             })

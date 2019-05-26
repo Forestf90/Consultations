@@ -10,12 +10,11 @@ namespace Consultations.Models
         public string Id { get; set; }
         public int Room { get; set; }
         public DateTime Date { get; set; }
-        public Teacher Teacher { get; set; }
-        public ICollection<StudentConsultation> Students { get; set; }
+        public ICollection<UserConsultation> AppUsers { get; set; }
 
         public Consultation()
         {
-            Students = new HashSet<StudentConsultation>();
+            AppUsers = new HashSet<UserConsultation>();
         }
     }
 }

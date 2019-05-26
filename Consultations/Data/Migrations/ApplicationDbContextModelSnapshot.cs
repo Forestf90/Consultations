@@ -25,31 +25,27 @@ namespace Consultations.Data.Migrations
 
                     b.Property<int>("Room");
 
-                    b.Property<string>("TeacherId");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("TeacherId");
 
                     b.ToTable("Consultations");
                 });
 
-            modelBuilder.Entity("Consultations.Models.StudentConsultation", b =>
+            modelBuilder.Entity("Consultations.Models.UserConsultation", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("ConsultationId");
 
-                    b.Property<string>("StudentId");
+                    b.Property<string>("UserId");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ConsultationId");
 
-                    b.HasIndex("StudentId");
+                    b.HasIndex("UserId");
 
-                    b.ToTable("StudentConsultation");
+                    b.ToTable("UserConsultation");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -214,11 +210,9 @@ namespace Consultations.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("Consultations.Models.Student", b =>
+            modelBuilder.Entity("Consultations.Models.AppUser", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
-
-                    b.Property<int>("Field");
 
                     b.Property<string>("FirstName");
 
@@ -226,49 +220,20 @@ namespace Consultations.Data.Migrations
 
                     b.Property<string>("Pesel");
 
-                    b.Property<short>("Semester");
+                    b.ToTable("AppUser");
 
-                    b.ToTable("Student");
-
-                    b.HasDiscriminator().HasValue("Student");
+                    b.HasDiscriminator().HasValue("AppUser");
                 });
 
-            modelBuilder.Entity("Consultations.Models.Teacher", b =>
-                {
-                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
-
-                    b.Property<string>("FirstName")
-                        .HasColumnName("Teacher_FirstName");
-
-                    b.Property<string>("LastName")
-                        .HasColumnName("Teacher_LastName");
-
-                    b.Property<string>("Pesel")
-                        .HasColumnName("Teacher_Pesel");
-
-                    b.Property<int>("Title");
-
-                    b.ToTable("Teacher");
-
-                    b.HasDiscriminator().HasValue("Teacher");
-                });
-
-            modelBuilder.Entity("Consultations.Models.Consultation", b =>
-                {
-                    b.HasOne("Consultations.Models.Teacher", "Teacher")
-                        .WithMany("Consultations")
-                        .HasForeignKey("TeacherId");
-                });
-
-            modelBuilder.Entity("Consultations.Models.StudentConsultation", b =>
+            modelBuilder.Entity("Consultations.Models.UserConsultation", b =>
                 {
                     b.HasOne("Consultations.Models.Consultation", "Consultation")
-                        .WithMany("Students")
+                        .WithMany("AppUsers")
                         .HasForeignKey("ConsultationId");
 
-                    b.HasOne("Consultations.Models.Student", "Student")
+                    b.HasOne("Consultations.Models.AppUser", "User")
                         .WithMany("Consultations")
-                        .HasForeignKey("StudentId");
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

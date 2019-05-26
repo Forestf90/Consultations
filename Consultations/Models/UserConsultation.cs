@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace Consultations.Models
 {
-    public class StudentConsultation
+    public class UserConsultation
     {
         public int Id { get; set; }
-        public string StudentId { get; set; }
-        public Student Student { get; set; }
+        public string UserId { get; set; }
+        public AppUser User { get; set; }
         public string ConsultationId { get; set; }
         public Consultation Consultation { get; set; }
 

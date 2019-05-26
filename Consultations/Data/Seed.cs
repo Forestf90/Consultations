@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Consultations.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -27,8 +28,10 @@ namespace Consultations.Data
                 }
             }
 
-            var poweruser = new IdentityUser
+            var poweruser = new AppUser
             {
+                FirstName="Michal",
+                LastName="Kowalsky",
                 UserName = Configuration.GetSection("UserSettings")["UserEmail"],
                 Email = Configuration.GetSection("UserSettings")["UserEmail"]
             };

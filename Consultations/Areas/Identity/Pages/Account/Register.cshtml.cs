@@ -16,14 +16,14 @@ namespace Consultations.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class RegisterModel : PageModel
     {
-        private readonly SignInManager<Student> _signInManager;
-        private readonly UserManager<Student> _userManager;
+        private readonly SignInManager<AppUser> _signInManager;
+        private readonly UserManager<AppUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
 
         public RegisterModel(
-            UserManager<Student> userManager,
-            SignInManager<Student> signInManager,
+            UserManager<AppUser> userManager,
+            SignInManager<AppUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender)
         {
@@ -40,8 +40,12 @@ namespace Consultations.Areas.Identity.Pages.Account
 
         public class InputModel
         {
+            [Required]
             public string FirstName { get; set; }
+            [Required]
             public string LastName { get; set; }
+            [Required]
+            [RegularExpression(@"[0-9]{11}")]
             public string Pesel { get; set; }
 
             [Required]
@@ -72,10 +76,15 @@ namespace Consultations.Areas.Identity.Pages.Account
             returnUrl = returnUrl ?? Url.Content("~/");
             if (ModelState.IsValid)
             {
-                var user = new Student { UserName = Input.Email, Email = Input.Email };
+                var user = new AppUser { UserName = Input.Email, Email = Input.Email ,
+                    FirstName =Input.FirstName , LastName=Input.LastName ,Pesel = Input.Pesel};
                 var result = await _userManager.CreateAsync(user, Input.Password);
+
+                
+
                 if (result.Succeeded)
                 {
+                    await _userManager.AddToRoleAsync(user, "Student");
                     _logger.LogInformation("User created a new account with password.");
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);

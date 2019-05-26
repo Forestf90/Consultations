@@ -9,8 +9,8 @@ namespace Consultations.Data
 {
     public class ApplicationDbContext : IdentityDbContext
     {
-        public DbSet<Teacher> Teachers { get; set; }
-        public DbSet<Student> Students { get; set; }
+        public DbSet<AppUser> AppUsers { get; set; }
+       // public DbSet<Student> Students { get; set; }
         public DbSet<Consultation> Consultations { get; set; }
 
 
@@ -25,24 +25,19 @@ namespace Consultations.Data
             //modelBuilder.Entity<Teacher>();
             //modelBuilder.Entity<Student>();
 
-            modelBuilder.Entity<StudentConsultation>()
+            modelBuilder.Entity<UserConsultation>()
             .HasKey(pt => new { pt.Id });
 
-            modelBuilder.Entity<StudentConsultation>()
-                        .HasOne(pt => pt.Student)
+            modelBuilder.Entity<UserConsultation>()
+                        .HasOne(pt => pt.User)
                         .WithMany(t => t.Consultations)
-                        .HasForeignKey(pt => pt.StudentId);
+                        .HasForeignKey(pt => pt.UserId);
 
-            modelBuilder.Entity<StudentConsultation>()
+            modelBuilder.Entity<UserConsultation>()
                         .HasOne(pt => pt.Consultation)
-                        .WithMany(p => p.Students)
+                        .WithMany(p => p.AppUsers)
                         .HasForeignKey(pt => pt.ConsultationId);
         }
 
-        public void AddTeacher(Teacher t)
-        {
-            Teachers.Add(t);
-            SaveChanges();
-        }
     }
 }

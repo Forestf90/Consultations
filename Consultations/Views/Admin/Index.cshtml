@@ -1,8 +1,89 @@
-﻿
+﻿@model IEnumerable<Consultations.ViewModels.DisplayUserViewModel>
+
 @{
-    ViewData["Title"] = "Admin Panel";
+    ViewData["Title"] = "Index";
 }
 
-<h2>Admin Panel</h2>
+<h2>Index</h2>
 
-<p>No i tutaj jakies dodawanie czy cos innego</p>
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Pesel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PhoneNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Roles)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Pesel)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PhoneNumber)
+            </td>
+            <td>
+                @foreach (var role in item.Roles)
+                {
+                    <span class="badge badge-primary">@role</span>
+                }
+
+            </td>
+            <td>
+                @if (!item.Roles.Contains("Teacher"))
+                {
+                <form asp-action="TeacherRole">
+                    <input type="hidden" name="email" value="@item.Email" />
+                    <input type="submit" value="Add Teacher Role" class="btn btn-success" />
+                </form>
+                }
+                else
+                {
+                <form asp-action="TeacherRole">
+                    <input type="hidden" name="email" value="@item.Email" />
+                    <input type="submit" value="Remove Teacher Role" class="btn btn-danger" />
+                </form>
+                }
+            </td>
+            <td>
+                @if (!item.Roles.Contains("Admin"))
+                {
+                <form asp-action="TeacherRole">
+                    <input type="hidden" name="email" value="@item.Email" />
+                    <input type="submit" value="Add Admin Role" class="btn btn-success" />
+                </form>
+                }
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
