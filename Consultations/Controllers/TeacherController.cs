@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Consultations.Data;
 using Consultations.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Consultations.Controllers
@@ -22,6 +23,11 @@ namespace Consultations.Controllers
             return View(_context.Teachers.ToList());
         }
 
+        [Authorize(Roles="Teacher")]
+        public IActionResult Panel()
+        {
+            return View();
+        }
         public IActionResult Create()
         {
             return View();
