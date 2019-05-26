@@ -8,6 +8,7 @@
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.css" />
+        <link rel="stylesheet" href="~/css/Style.css" />
     </environment>
     <environment exclude="Development">
         <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
@@ -34,7 +35,7 @@
                     <li><a asp-area="" asp-controller="Teacher" asp-action="Index">Teachers</a></li>
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <li><a asp-area="" asp-controller="Admin" asp-action="Index">My Consultations</a></li>
+                        <li><a asp-area="" asp-controller="Consultation" asp-action="Index">My Consultations</a></li>
                     }
                     @if (User.IsInRole("Teacher"))
                     {

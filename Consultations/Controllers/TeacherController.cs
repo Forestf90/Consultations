@@ -41,11 +41,11 @@ namespace Consultations.Controllers
             return View(listTeacher);
         }
 
-        [Authorize(Roles="Teacher")]
-        public IActionResult Panel()
-        {
-            return View();
-        }
+        //[Authorize(Roles="Teacher")]
+        //public IActionResult Panel()
+        //{
+        //    return View();
+        //}
 
     }
 }

@@ -64,5 +64,29 @@ namespace Consultations.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+
+        [HttpPost]
+        public IActionResult AdminRole(string email)
+        {
+            var user = _context.AppUsers.Where(q => q.Email == email).FirstOrDefault();
+
+            //_userManager.AddToRole(user, "Student");
+            var roles = _userManager.GetRolesAsync(user).Result;
+
+            if (roles.Contains("Admin"))
+            {
+                _userManager.RemoveFromRoleAsync(user, "Admin");
+                
+            }
+            else
+            {
+                _userManager.AddToRoleAsync(user, "Admin");
+                
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
     }
 }

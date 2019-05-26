@@ -15,7 +15,7 @@ namespace Consultations.Data
         {
             //adding customs roles
             var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            var UserManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
+            var UserManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
             string[] roleNames = { "Admin", "Student", "Teacher" };
             IdentityResult roleResult;
 
@@ -32,6 +32,7 @@ namespace Consultations.Data
             {
                 FirstName="Michal",
                 LastName="Kowalsky",
+                Pesel="96094597030",
                 UserName = Configuration.GetSection("UserSettings")["UserEmail"],
                 Email = Configuration.GetSection("UserSettings")["UserEmail"]
             };
