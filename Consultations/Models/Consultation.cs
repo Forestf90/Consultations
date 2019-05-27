@@ -9,8 +9,6 @@ namespace Consultations.Models
     public class Consultation
     {
         public string Id { get; set; }
-        [Required]
-        [Range(1,500)]
         public int Room { get; set; }
         public DateTime Date { get; set; }
         public ICollection<UserConsultation> AppUsers { get; set; }

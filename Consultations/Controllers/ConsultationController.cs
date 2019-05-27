@@ -22,6 +22,23 @@ namespace Consultations.Controllers
             _context = context;
             _userManager = userManager;
         }
+
+        public void FindStudents()
+        {
+            var students = _context.UserRoles.Join(_context.Roles, e => e.RoleId, r => r.Id, (e, r) => new {
+                RName = r.Name,
+                UId = e.UserId
+            })
+        .Where(q => q.RName == "Student").Select(o => o.UId);
+
+            var pesels = new List<string>();
+            foreach (var stu in students)
+            {
+                var temp = _context.AppUsers.Where(q => q.Id == stu).Select(o => o.Pesel).FirstOrDefault();
+                pesels.Add(temp);
+            }
+            ViewBag.Students = pesels;
+        }
         // GET: Consultation
         public ActionResult Index()
         {
@@ -38,10 +55,11 @@ namespace Consultations.Controllers
                 .Where(p => p.AppUsers.Select(z => z.UserId).Contains(userId))
                 .Select(x => new DisplayConsultationViewModel
                 {
-                    
+                    Id =x.Id,
                     Teacher = x.AppUsers.Where(p => teacher.Contains(p.UserId)).First().User.FirstName+" "+
                                 x.AppUsers.Where(p => teacher.Contains(p.UserId)).First().User.LastName,
-                    Students = x.AppUsers.Count(),
+                    TeacherId = x.AppUsers.Where(p => teacher.Contains(p.UserId)).First().User.Email,
+                    Students = x.AppUsers.Count()-1,
                     Room = x.Room,
                     Date = x.Date
                 });
@@ -49,15 +67,28 @@ namespace Consultations.Controllers
         }
 
         // GET: Consultation/Details/5
-        public ActionResult Details(int id)
+        [Authorize(Roles ="Teacher")]
+        public ActionResult Edit(string id, string teacher)
         {
-            return View();
+            var consultation = _context.Consultations.Where(q => q.Id == id).FirstOrDefault();
+
+            FindStudents();
+
+            var createCon = new CreateConsultationViewModel
+            {
+                Date=consultation.Date,
+                Room =consultation.Room,
+                Students =consultation.AppUsers.Select(x => x.User.Pesel).ToList()
+            };
+
+            return View(createCon);
         }
 
         // GET: Consultation/Create
         [Authorize(Roles = "Teacher")]
         public ActionResult Create()
         {
+            FindStudents();
             return View();
         }
 
@@ -65,11 +96,32 @@ namespace Consultations.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Teacher")]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(CreateConsultationViewModel createConsultationViewModel)
         {
             try
             {
-                // TODO: Add insert logic here
+                if (ModelState.IsValid)
+                {
+                    var students = new List<UserConsultation>();
+                    var teacherId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+                    createConsultationViewModel.Students
+                        .Add(_context.AppUsers.Where(x => x.Id == teacherId).Select(o => o.Pesel).FirstOrDefault());
+
+                    foreach (var stu in createConsultationViewModel.Students)
+                    {
+                        var temp = _context.AppUsers.Where(q => q.Id == stu).FirstOrDefault();
+                        students.Add(new UserConsultation {User=_context.AppUsers.Where(o => o.Pesel==stu).FirstOrDefault()});
+                    }
+                    var consult = new Consultation
+                    {
+                        AppUsers = students,
+                        Room = createConsultationViewModel.Room,
+                        Date = createConsultationViewModel.Date
+                    };
+                    _context.Consultations.Add(consult);
+                    _context.SaveChanges();
+                }
 
                 return RedirectToAction(nameof(Index));
             }

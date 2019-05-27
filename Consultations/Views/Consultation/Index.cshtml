@@ -4,11 +4,8 @@
     ViewData["Title"] = "Index";
 }
 
-<h2>Index</h2>
+<h2>Consultations</h2>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -43,11 +40,14 @@
                 @Html.DisplayFor(modelItem => item.Date)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                @if (User.Identity.Name == item.TeacherId)
+                {
+                
+                <a asp-action="Edit" asp-route-id="@item.Id" asp-route-teacher="@item.TeacherId" class="btn btn-primary">Edit</a>
+                
+                }
             </td>
-        </tr>
+            </tr>
 }
     </tbody>
 </table>

@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Consultations.ViewModels
 {
-    public class DisplayConsultationViewModel
+    public class CreateConsultationViewModel
     {
-        public string Id { get; set; }
-        public string TeacherId { get; set; }
-        public string Teacher { get; set; }
-        public int Students { get; set; }
+        [Required]
+        public List<string> Students { get; set; }
+        [Required]
+        [Range(1, 500)]
         public int Room { get; set; }
+        [Required]
         public DateTime Date { get; set; }
 
     }
