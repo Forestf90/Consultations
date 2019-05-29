@@ -13,6 +13,8 @@ using Consultations.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Consultations.Models;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Consultations.EmailSender;
 
 namespace Consultations
 {
@@ -51,9 +53,12 @@ namespace Consultations
                     .AddDefaultTokenProviders()
                     .AddEntityFrameworkStores<ApplicationDbContext>();
 
-
+            services.AddTransient<IEmailSender, EmailReminder>();
+            services.AddSingleton<IEMailService, AutoEmail>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            AutoEmail.();
+            AutoEmail.CheckConsultation();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

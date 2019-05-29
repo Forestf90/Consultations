@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Consultations.Data;
+using Consultations.EmailSender;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -36,6 +37,7 @@ namespace Consultations
             }
 
             host.Run();
+            //AutoEmail.CheckConsultation();
         }
         
         public static IWebHost BuildWebHost(string[] args) =>
