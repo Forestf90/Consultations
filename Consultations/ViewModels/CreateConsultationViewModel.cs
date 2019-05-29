@@ -8,6 +8,7 @@ namespace Consultations.ViewModels
 {
     public class CreateConsultationViewModel
     {
+        public string Id { get; set; }
         [Required]
         public List<string> Students { get; set; }
         [Required]

@@ -66,7 +66,6 @@ namespace Consultations.Controllers
             return View(list);
         }
 
-        // GET: Consultation/Details/5
         [Authorize(Roles ="Teacher")]
         public ActionResult Edit(string id, string teacher)
         {
@@ -87,12 +86,56 @@ namespace Consultations.Controllers
 
             var createCon = new CreateConsultationViewModel
             {
+                Id =consultation.Id,
                 Date=consultation.Date,
                 Room =consultation.Room,
                 Students =consultation.AppStudents.ToList()
             };
 
             return View(createCon);
+        }
+        [Authorize(Roles = "Teacher")]
+        [HttpPost]
+        public IActionResult Edit(CreateConsultationViewModel createConsultationViewModel)
+        {
+            FindStudents();
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var consultation = _context.Consultations.Where(x => x.Id == createConsultationViewModel.Id).FirstOrDefault();
+                    var usercons = _context.UserConsultation.Where(z => z.ConsultationId == createConsultationViewModel.Id);
+                    _context.UserConsultation.RemoveRange(usercons);
+
+                    var students = new List<UserConsultation>();
+                    var teacherId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+                    createConsultationViewModel.Students
+                        .Add(_context.AppUsers.Where(x => x.Id == teacherId).Select(o => o.Pesel).FirstOrDefault());
+
+                    foreach (var stu in createConsultationViewModel.Students)
+                    {
+                        var temp = _context.AppUsers.Where(q => q.Id == stu).FirstOrDefault();
+                        students.Add(new UserConsultation { User = _context.AppUsers.Where(o => o.Pesel == stu).FirstOrDefault() });
+                    }
+
+                   // _context.UserConsultation.RemoveRange(students);
+                    //var consultation = _context.Consultations.Where(x => x.Id == createConsultationViewModel.Id).FirstOrDefault();
+
+                    consultation.AppUsers = students;
+                    consultation.Room = createConsultationViewModel.Room;
+                    consultation.Date = createConsultationViewModel.Date;
+                    _context.SaveChanges();
+
+                }
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        
         }
 
         // GET: Consultation/Create
