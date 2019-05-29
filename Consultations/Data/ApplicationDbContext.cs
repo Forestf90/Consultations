@@ -12,6 +12,7 @@ namespace Consultations.Data
         public DbSet<AppUser> AppUsers { get; set; }
        // public DbSet<Student> Students { get; set; }
         public DbSet<Consultation> Consultations { get; set; }
+        public DbSet<UserConsultation> UserConsultation { get; set; }
 
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)

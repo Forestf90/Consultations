@@ -70,7 +70,18 @@ namespace Consultations.Controllers
         [Authorize(Roles ="Teacher")]
         public ActionResult Edit(string id, string teacher)
         {
-            var consultation = _context.Consultations.Where(q => q.Id == id).FirstOrDefault();
+
+
+            var consultation = _context.Consultations
+                .GroupJoin(_context.UserConsultation, e => e.Id, r => r.ConsultationId, (e, r) =>
+                 new { Date = e.Date, Room = e.Room, AppStudents = r.Select(t => t.User.Pesel),
+                     Emails = r.Select(o => o.User.Email), Id = e.Id })
+                .Where(q => q.Id == id).FirstOrDefault();
+
+            if (!consultation.Emails.Contains(teacher))
+            {
+                return RedirectToAction(nameof(Edit));
+            }
 
             FindStudents();
 
@@ -78,7 +89,7 @@ namespace Consultations.Controllers
             {
                 Date=consultation.Date,
                 Room =consultation.Room,
-                Students =consultation.AppUsers.Select(x => x.User.Pesel).ToList()
+                Students =consultation.AppStudents.ToList()
             };
 
             return View(createCon);
