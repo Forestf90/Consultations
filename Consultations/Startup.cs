@@ -15,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Consultations.Models;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Consultations.EmailSender;
+using Microsoft.Extensions.Hosting;
 
 namespace Consultations
 {
@@ -54,15 +55,17 @@ namespace Consultations
                     .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddTransient<IEmailSender, EmailReminder>();
-            services.AddSingleton<IEMailService, AutoEmail>();
+          //  services.AddSingleton<IEMailService, AutoEmail>();
+
+            services.AddSingleton<IHostedService, EmailService>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            AutoEmail.();
-            AutoEmail.CheckConsultation();
+            //AutoEmail.();
+            //AutoEmail.CheckConsultation();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, Microsoft.AspNetCore.Hosting.IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {

@@ -23,7 +23,7 @@ namespace Consultations.EmailSender
         private static  IServiceProvider m_ServiceProvider;
 
 
-        public static AutoEmail(IServiceProvider serviceProvider)
+        public AutoEmail(IServiceProvider serviceProvider)
         {
             if (serviceProvider == null)
                 throw new ArgumentNullException(nameof(serviceProvider));
