@@ -38,6 +38,14 @@ namespace Consultations.Data
                         .HasOne(pt => pt.Consultation)
                         .WithMany(p => p.AppUsers)
                         .HasForeignKey(pt => pt.ConsultationId);
+
+            //modelBuilder.Entity<Consultation>()
+            //    .HasKey(pk => new { pk.Id });
+
+            //modelBuilder.Entity<Consultation>()
+            //   .HasMany(x => x.AppUsers)
+            //   .WithOne(z => z.Consultation)
+            //   .HasForeignKey(f => f.ConsultationId);
         }
 
     }

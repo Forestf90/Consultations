@@ -55,13 +55,12 @@ namespace Consultations
                     .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddTransient<IEmailSender, EmailReminder>();
-          //  services.AddSingleton<IEMailService, AutoEmail>();
+
 
             services.AddSingleton<IHostedService, EmailService>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            //AutoEmail.();
-            //AutoEmail.CheckConsultation();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

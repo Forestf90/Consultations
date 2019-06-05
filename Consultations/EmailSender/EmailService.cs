@@ -47,20 +47,45 @@ namespace Consultations.EmailSender
                     var consultation = dbContext.Consultations
                         .GroupJoin(dbContext.UserConsultation, e => e.Id, r => r.ConsultationId, (e, r) =>
                          new {
+                             Id =e.Id,
                              Date = e.Date,
                              Room =e.Room,
                              Emails = r.Select(o => o.User.Email),
+                             Remind=e.EmailRemaind
                  })
                 .Where(x=>x.Date<tommorow);
 
                     foreach( var consult in consultation)
                     {
                         //var emails = consult.AppUsers.Select(n => n.User.Email);
-                        foreach(var em in consult.Emails)
+                        var consul = dbContext.Consultations.Where(x => x.Id == consult.Id).FirstOrDefault();
+                        if (consult.Remind)
                         {
-                            await _emailReminder.SendEmailAsync(em, "Nadchodzące konsultacje", 
-                                consult.Date.ToString("g")+" bierzesz udzial w konsultacjach w sali numer "+ consult.Room);
+                            if (consult.Date < DateTime.Now)
+                            {
+                                var uscon = dbContext.UserConsultation.Where(x => x.ConsultationId == consul.Id).ToList();
+                                consul.AppUsers = uscon;
+                                dbContext.Consultations.Attach(consul);
+                                dbContext.Consultations.Remove(consul);
+                                dbContext.UserConsultation.RemoveRange(uscon);
+                                dbContext.SaveChanges();
+                            }
                         }
+                        else
+                        {
+                            foreach (var em in consult.Emails)
+                            {
+                                await _emailReminder.SendEmailAsync(em, "Nadchodzące konsultacje",
+                                    consult.Date.ToString("g") + " bierzesz udzial w konsultacjach w sali numer " + consult.Room);
+
+                            }
+
+                            //var consul = dbContext.Consultations.Where(x => x.Id == consult.Id).FirstOrDefault();
+                            consul.EmailRemaind = true;
+                            dbContext.SaveChanges();
+                        }
+
+
                     }
 
                    // await emailSender.SendEmailAsync(consultation.AppUsers.FirstOrDefault().User.Email, "tak", "tersc meila");

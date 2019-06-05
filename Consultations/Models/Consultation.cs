@@ -12,6 +12,7 @@ namespace Consultations.Models
         public int Room { get; set; }
         public DateTime Date { get; set; }
         public ICollection<UserConsultation> AppUsers { get; set; }
+        public bool EmailRemaind { get; set; }
 
         public Consultation()
         {
