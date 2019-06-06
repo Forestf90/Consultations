@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Consultations.Data;
 using Consultations.Models;
+using Consultations.PagedLists;
 using Consultations.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -23,7 +24,7 @@ namespace Consultations.Controllers
             _userManager = userManager;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int page = 1, int itemsOnPage = 5)
         {
             var list = _context.AppUsers.Select(n => new DisplayUserViewModel
             {
@@ -39,7 +40,19 @@ namespace Consultations.Controllers
                 .Where(q => q.UId == n.Id).Select(p => p.RName)
                 //.Roles.Where(q => q.).Select(g => g.Name)
             });
-            return View(list);
+
+            var pagedList = new UserPagedList();
+            pagedList.CurrentPage = page;
+            pagedList.TotalPages = list.Count() / itemsOnPage;
+            if (list.Count() % itemsOnPage > 0)
+                pagedList.TotalPages++;
+            pagedList.ItemsOnPage = itemsOnPage;
+
+            pagedList.GetUsers = new List<DisplayUserViewModel>();
+            pagedList.GetUsers = list.Skip((page - 1) * itemsOnPage)
+                .Take(itemsOnPage).ToList();
+
+            return View(pagedList);
         }
 
 
