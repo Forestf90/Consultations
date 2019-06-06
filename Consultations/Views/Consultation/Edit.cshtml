@@ -49,7 +49,15 @@
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+@if (!String.IsNullOrEmpty((string)ViewData["Consult"]))
+{
+    @if ((string)ViewData["Consult"] == "ok")
+    {
+        <div class="alert alert-success" role="alert">Consultation update!</div>
+    }
+    else
+    {
+        <div class="alert alert-danger" role="alert">@ViewData["Consult"]</div>
+    }
+}
 

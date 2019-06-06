@@ -67,10 +67,10 @@ namespace Consultations.Controllers
         }
 
         [Authorize(Roles ="Teacher")]
-        public ActionResult Edit(string id, string teacher)
+        public ActionResult Edit(string id, string teacher, string error=null)
         {
 
-
+            ViewData["Consult"] = error;
             var consultation = _context.Consultations
                 .GroupJoin(_context.UserConsultation, e => e.Id, r => r.ConsultationId, (e, r) =>
                  new { Date = e.Date, Room = e.Room, AppStudents = r.Select(t => t.User.Pesel),
@@ -95,12 +95,15 @@ namespace Consultations.Controllers
             return View(createCon);
         }
         [Authorize(Roles = "Teacher")]
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public IActionResult Edit(CreateConsultationViewModel createConsultationViewModel)
         {
             FindStudents();
+
             try
             {
+
                 if (ModelState.IsValid)
                 {
                     var consultation = _context.Consultations.Where(x => x.Id == createConsultationViewModel.Id).FirstOrDefault();
@@ -112,6 +115,15 @@ namespace Consultations.Controllers
 
                     createConsultationViewModel.Students
                         .Add(_context.AppUsers.Where(x => x.Id == teacherId).Select(o => o.Pesel).FirstOrDefault());
+
+                    var when = createConsultationViewModel.Date;
+                    if (when < DateTime.Now.AddHours(-24))
+                    {
+                        return RedirectToAction(nameof(Edit), new { id= consultation.Id,
+                            teacher = _context.AppUsers.Where(x => x.Id == teacherId).Select(o => o.Email).FirstOrDefault()
+                            , error = "Cannot edit consultaton 24h before start" });
+                    }
+
 
                     foreach (var stu in createConsultationViewModel.Students)
                     {
@@ -129,7 +141,7 @@ namespace Consultations.Controllers
 
                 }
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Edit), new { error="ok"});
             }
             catch
             {
@@ -140,8 +152,9 @@ namespace Consultations.Controllers
 
         // GET: Consultation/Create
         [Authorize(Roles = "Teacher")]
-        public ActionResult Create()
+        public ActionResult Create(string error = null)
         {
+            ViewData["Consult"] = error;
             FindStudents();
             return View();
         }
@@ -154,6 +167,11 @@ namespace Consultations.Controllers
         {
             try
             {
+                var when = createConsultationViewModel.Date;
+                if (when < DateTime.Now.AddHours(-24))
+                {
+                    return RedirectToAction(nameof(Create), new { error = "Cannot create consultaton 24h before start" });
+                }
                 if (ModelState.IsValid)
                 {
                     var students = new List<UserConsultation>();
@@ -177,7 +195,7 @@ namespace Consultations.Controllers
                     _context.SaveChanges();
                 }
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Create), new { error = "ok" });
             }
             catch
             {
