@@ -12,6 +12,10 @@ using Microsoft.EntityFrameworkCore;
 using Consultations.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Consultations.Models;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Consultations.EmailSender;
+using Microsoft.Extensions.Hosting;
 
 namespace Consultations
 {
@@ -41,7 +45,7 @@ namespace Consultations
             //    .AddRoles<IdentityRole>()
             //    .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            services.AddIdentity<IdentityUser,IdentityRole>(config =>
+            services.AddIdentity<AppUser, IdentityRole>(config =>
             {
                // config.SignIn.RequireConfirmedEmail = true;
             })
@@ -50,13 +54,17 @@ namespace Consultations
                     .AddDefaultTokenProviders()
                     .AddEntityFrameworkStores<ApplicationDbContext>();
 
+            services.AddTransient<IEmailSender, EmailReminder>();
 
+
+            services.AddSingleton<IHostedService, EmailService>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, Microsoft.AspNetCore.Hosting.IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {

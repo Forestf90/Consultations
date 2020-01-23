@@ -8,6 +8,10 @@
   <ItemGroup>
     <Compile Remove="Data\Migrations\20190525171246_init.cs" />
     <Compile Remove="Data\Migrations\20190525171246_init.Designer.cs" />
+    <Compile Remove="Data\Migrations\20190526213708_init2.cs" />
+    <Compile Remove="Data\Migrations\20190526213708_init2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20190526231201_qwerty.cs" />
+    <Compile Remove="Data\Migrations\20190526231201_qwerty.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -18,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="PagedLists\" />
+    <Folder Include="Areas\Identity\Services\" />
   </ItemGroup>
 
 </Project>

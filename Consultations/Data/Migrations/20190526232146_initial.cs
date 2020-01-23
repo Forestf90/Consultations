@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Consultations.Data.Migrations
 {
-    public partial class @in : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,11 +14,6 @@ namespace Consultations.Data.Migrations
             migrationBuilder.DropIndex(
                 name: "RoleNameIndex",
                 table: "AspNetRoles");
-
-            migrationBuilder.AddColumn<int>(
-                name: "Field",
-                table: "AspNetUsers",
-                nullable: true);
 
             migrationBuilder.AddColumn<string>(
                 name: "FirstName",
@@ -35,31 +30,6 @@ namespace Consultations.Data.Migrations
                 table: "AspNetUsers",
                 nullable: true);
 
-            migrationBuilder.AddColumn<short>(
-                name: "Semester",
-                table: "AspNetUsers",
-                nullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "Teacher_FirstName",
-                table: "AspNetUsers",
-                nullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "Teacher_LastName",
-                table: "AspNetUsers",
-                nullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "Teacher_Pesel",
-                table: "AspNetUsers",
-                nullable: true);
-
-            migrationBuilder.AddColumn<int>(
-                name: "Title",
-                table: "AspNetUsers",
-                nullable: true);
-
             migrationBuilder.AddColumn<string>(
                 name: "Discriminator",
                 table: "AspNetUsers",
@@ -72,41 +42,34 @@ namespace Consultations.Data.Migrations
                 {
                     Id = table.Column<string>(nullable: false),
                     Room = table.Column<int>(nullable: false),
-                    Date = table.Column<DateTime>(nullable: false),
-                    TeacherId = table.Column<string>(nullable: true)
+                    Date = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Consultations", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Consultations_AspNetUsers_TeacherId",
-                        column: x => x.TeacherId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "StudentConsultation",
+                name: "UserConsultation",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    StudentId = table.Column<string>(nullable: true),
+                    UserId = table.Column<string>(nullable: true),
                     ConsultationId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_StudentConsultation", x => x.Id);
+                    table.PrimaryKey("PK_UserConsultation", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_StudentConsultation_Consultations_ConsultationId",
+                        name: "FK_UserConsultation_Consultations_ConsultationId",
                         column: x => x.ConsultationId,
                         principalTable: "Consultations",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_StudentConsultation_AspNetUsers_StudentId",
-                        column: x => x.StudentId,
+                        name: "FK_UserConsultation_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -125,25 +88,20 @@ namespace Consultations.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Consultations_TeacherId",
-                table: "Consultations",
-                column: "TeacherId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_StudentConsultation_ConsultationId",
-                table: "StudentConsultation",
+                name: "IX_UserConsultation_ConsultationId",
+                table: "UserConsultation",
                 column: "ConsultationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StudentConsultation_StudentId",
-                table: "StudentConsultation",
-                column: "StudentId");
+                name: "IX_UserConsultation_UserId",
+                table: "UserConsultation",
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "StudentConsultation");
+                name: "UserConsultation");
 
             migrationBuilder.DropTable(
                 name: "Consultations");
@@ -157,10 +115,6 @@ namespace Consultations.Data.Migrations
                 table: "AspNetRoles");
 
             migrationBuilder.DropColumn(
-                name: "Field",
-                table: "AspNetUsers");
-
-            migrationBuilder.DropColumn(
                 name: "FirstName",
                 table: "AspNetUsers");
 
@@ -170,26 +124,6 @@ namespace Consultations.Data.Migrations
 
             migrationBuilder.DropColumn(
                 name: "Pesel",
-                table: "AspNetUsers");
-
-            migrationBuilder.DropColumn(
-                name: "Semester",
-                table: "AspNetUsers");
-
-            migrationBuilder.DropColumn(
-                name: "Teacher_FirstName",
-                table: "AspNetUsers");
-
-            migrationBuilder.DropColumn(
-                name: "Teacher_LastName",
-                table: "AspNetUsers");
-
-            migrationBuilder.DropColumn(
-                name: "Teacher_Pesel",
-                table: "AspNetUsers");
-
-            migrationBuilder.DropColumn(
-                name: "Title",
                 table: "AspNetUsers");
 
             migrationBuilder.DropColumn(

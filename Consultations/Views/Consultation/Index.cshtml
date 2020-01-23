@@ -1,0 +1,53 @@
+﻿@model IEnumerable<Consultations.ViewModels.DisplayConsultationViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Consultations</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Teacher)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Students)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Room)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Teacher)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Students)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Room)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                @if (User.Identity.Name == item.TeacherId)
+                {
+                
+                <a asp-action="Edit" asp-route-id="@item.Id" asp-route-teacher="@item.TeacherId" class="btn btn-primary">Edit</a>
+                
+                }
+            </td>
+            </tr>
+}
+    </tbody>
+</table>
